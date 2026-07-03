@@ -271,9 +271,12 @@
   .block-thumb:hover .play-badge{background:rgba(20,20,16,.45);}
 
   .actions-row{
-    display:flex;
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
     gap:10px;
-    flex-wrap:wrap;
+  }
+  @media (max-width:420px){
+    .actions-row{grid-template-columns:1fr;}
   }
   .ghost-btn{
     appearance:none;
@@ -282,9 +285,15 @@
     color:var(--ink);
     font-size:13.5px;
     font-weight:700;
-    padding:10px 14px;
+    padding:12px 10px;
     border-radius:9px;
     cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:7px;
+    text-align:center;
+    line-height:1.2;
   }
   .ghost-btn:hover{border-color:var(--ink-soft);}
   .whatsapp-btn{
@@ -328,7 +337,7 @@
 
   <div id="planArea"></div>
 
-  <div class="footer">&copy; <span id="year"></span> Grizzlys Unihockey am Greifensee</div>
+  <div class="footer">&copy; <span id="year"></span> Unihockey am Greifensee</div>
 </div>
 
 <script>
@@ -545,7 +554,7 @@
 
     var actions = document.createElement("div");
     actions.className = "actions-row";
-    actions.innerHTML = '<button class="ghost-btn" id="reshuffleBtn">&#8635; Ganzen Plan neu mischen</button><button class="ghost-btn" id="printBtn">Drucken</button><button class="ghost-btn whatsapp-btn" id="waBtn">&#128242; Per WhatsApp teilen</button>';
+    actions.innerHTML = '<button class="ghost-btn" id="reshuffleBtn">&#8635; Neu mischen</button><button class="ghost-btn whatsapp-btn" id="waBtn">&#128242; WhatsApp</button><button class="ghost-btn" id="printBtn">Drucken</button>';
     planArea.appendChild(actions);
     document.getElementById("reshuffleBtn").onclick = buildPlan;
     document.getElementById("printBtn").onclick = function(){window.print();};
