@@ -1,0 +1,483 @@
+<title>Grizzlys Trainingsplaner</title>
+<style>
+  :root{
+    --ground:#F2F3EE;
+    --panel:#FFFFFF;
+    --ink:#1E2320;
+    --ink-soft:#5B6058;
+    --line:#DBDCCF;
+    --accent:#D9622B;
+    --accent-ink:#7A2E0C;
+    --forest:#3F6B4A;
+    --forest-ink:#1F3A27;
+    --slate:#2B4A66;
+    --slate-ink:#16283A;
+    --amber-tint:#FBE9DD;
+    --forest-tint:#E1EBE2;
+    --slate-tint:#DFE7ED;
+    font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--ground);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{
+    max-width:640px;
+    margin:0 auto;
+    padding:28px 18px 60px;
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+  }
+  .eyebrow{
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--forest-ink);
+  }
+  h1{
+    font-size:26px;
+    font-weight:800;
+    letter-spacing:-.01em;
+    margin:2px 0 0;
+    text-wrap:balance;
+  }
+  .sub{
+    font-size:14.5px;
+    color:var(--ink-soft);
+    margin:0;
+    max-width:46ch;
+  }
+
+  .panel{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:18px;
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+  }
+  .field-label{
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:8px;
+    display:block;
+  }
+  .chip-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  .chip-btn{
+    appearance:none;
+    border:1.5px solid var(--line);
+    background:var(--panel);
+    color:var(--ink);
+    font-size:14px;
+    font-weight:700;
+    padding:9px 16px;
+    border-radius:999px;
+    cursor:pointer;
+    transition:border-color .12s, background .12s, color .12s;
+  }
+  .chip-btn:hover{border-color:var(--ink-soft);}
+  .chip-btn:focus-visible{outline:3px solid var(--slate); outline-offset:2px;}
+  .chip-btn.active{
+    background:var(--forest);
+    border-color:var(--forest);
+    color:#fff;
+  }
+  .chip-btn.active.focus-accent{
+    background:var(--accent);
+    border-color:var(--accent);
+  }
+
+  .go-btn{
+    appearance:none;
+    border:none;
+    background:var(--accent);
+    color:#fff;
+    font-size:15.5px;
+    font-weight:800;
+    padding:14px 20px;
+    border-radius:11px;
+    cursor:pointer;
+    letter-spacing:.01em;
+  }
+  .go-btn:disabled{
+    background:#C9C7B8;
+    cursor:not-allowed;
+  }
+  .go-btn:not(:disabled):hover{background:#C1541F;}
+  .go-btn:focus-visible{outline:3px solid var(--slate-ink); outline-offset:2px;}
+
+  .plan-head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:10px;
+  }
+  .plan-head h2{
+    font-size:18px;
+    margin:0;
+    font-weight:800;
+  }
+  .plan-total{
+    font-size:13px;
+    font-weight:700;
+    color:var(--ink-soft);
+    font-variant-numeric:tabular-nums;
+    white-space:nowrap;
+  }
+
+  .block{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-left:5px solid var(--forest);
+    border-radius:10px;
+    padding:14px 16px;
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+  }
+  .block.k-schwerpunkt{border-left-color:var(--accent);}
+  .block.k-spielen{border-left-color:var(--slate);}
+  .block.k-match{border-left-color:var(--ink);}
+
+  .block-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+  }
+  .block-tags{
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+    align-items:center;
+  }
+  .tag{
+    font-size:10.5px;
+    font-weight:800;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    padding:3px 8px;
+    border-radius:6px;
+    background:var(--forest-tint);
+    color:var(--forest-ink);
+  }
+  .tag.t-accent{background:var(--amber-tint); color:var(--accent-ink);}
+  .tag.t-slate{background:var(--slate-tint); color:var(--slate-ink);}
+  .tag.t-dur{background:#EEEDE3; color:var(--ink-soft);}
+
+  .reroll{
+    appearance:none;
+    border:1px solid var(--line);
+    background:var(--panel);
+    color:var(--ink-soft);
+    font-size:12px;
+    font-weight:700;
+    padding:5px 9px;
+    border-radius:8px;
+    cursor:pointer;
+    flex:none;
+  }
+  .reroll:hover{border-color:var(--ink-soft); color:var(--ink);}
+
+  .block h3{
+    font-size:16px;
+    margin:2px 0 0;
+    font-weight:800;
+  }
+  .block p{
+    margin:0;
+    font-size:14px;
+    line-height:1.45;
+    color:var(--ink);
+  }
+  .block .meta{
+    font-size:12.5px;
+    color:var(--ink-soft);
+    line-height:1.5;
+  }
+  .block .meta b{color:var(--ink);}
+
+  .actions-row{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .ghost-btn{
+    appearance:none;
+    border:1.5px solid var(--line);
+    background:var(--panel);
+    color:var(--ink);
+    font-size:13.5px;
+    font-weight:700;
+    padding:10px 14px;
+    border-radius:9px;
+    cursor:pointer;
+  }
+  .ghost-btn:hover{border-color:var(--ink-soft);}
+
+  .hint{
+    font-size:12px;
+    color:var(--ink-soft);
+    line-height:1.5;
+    border-top:1px solid var(--line);
+    padding-top:14px;
+  }
+
+  @media print{
+    .panel, .actions-row, .hint{display:none;}
+    body{background:#fff;}
+  }
+</style>
+
+<div class="wrap">
+  <div>
+    <div class="eyebrow">Grizzlys &middot; Kleinfeld</div>
+    <h1>Trainingsplan-Generator</h1>
+    <p class="sub">Stufe und Schwerpunkt wählen &mdash; der Generator stellt Warmup, zwei Schwerpunkt-Übungen, eine Spielform und die Mätschlizeit zusammen.</p>
+  </div>
+
+  <div class="panel">
+    <div>
+      <span class="field-label">1. Trainingsstufe</span>
+      <div class="chip-row" id="levelRow"></div>
+    </div>
+    <div>
+      <span class="field-label">2. Schwerpunkt</span>
+      <div class="chip-row" id="focusRow"></div>
+    </div>
+    <button class="go-btn" id="goBtn" disabled>Trainingsplan erstellen</button>
+  </div>
+
+  <div id="planArea"></div>
+
+  <div class="hint">
+    Übungsdatenbank aus <b>coach.grizzlys.club/startseite/kleinfeld</b> übertragen (Warmup, Passen, Schiessen, Ballführen, Spielen). Neue Übungen lassen sich im Quelltext im <code>EXERCISES</code>-Objekt ergänzen &mdash; pro Eintrag Titel, Mindeststufe, Beschreibung, Material. Die Kategorie <b>Spielen</b> hat aktuell nur 2 erfasste Einträge; für mehr Abwechslung lohnt sich dort eine Ergänzung.
+  </div>
+</div>
+
+<script>
+(function(){
+  var LEVELS = ["U9","U11","U13","U16"];
+  var levelLabel = {"U9":"ab U9","U11":"ab U11","U13":"ab U13","U16":"ab U16"};
+
+  var EXERCISES = {
+    warmup: [
+      {t:"Komm mit, lauf weg", l:"U9", d:"Im Kreis berührt ein Fänger von aussen jemanden und ruft „komm mit“ oder „lauf weg“. Beide laufen um den Kreis, wer zuerst die Lücke erreicht, bleibt stehen.", m:"Keins", v:"Mit/ohne Stock und Ball; Spieler sitzen oder stehen"},
+      {t:"Tatzelwurm", l:"U9", d:"Ring-Formation: Ein Fänger muss eine Person fangen, während die anderen den Ring drehend schützen.", m:"Keins"},
+      {t:"Schiffe versenken", l:"U9", d:"1–3 Fänger versuchen mit weichen Bällen, Bälle durch Gymnastikreifen zu werfen. Versenkte Spieler können erlöst werden.", m:"Ein Reifen pro Spieler, 1–3 weiche Bälle", v:"Rollentausch; Aufgaben für Versenkte"},
+      {t:"Unihockey-Handball", l:"U9", d:"Zwei Teams spielen mit dem Ball in der Hand. Ballträger darf einen Schritt machen, dann passen oder werfen.", m:"Tore, Unihockeyball", v:"Mit zwei Bällen gleichzeitig"},
+      {t:"Schere-Stein-Papier-Hüpfen", l:"U9", d:"Teams hüpfen durch eine Ringkolonne aufeinander zu; treffen sie sich, entscheidet Schere-Stein-Papier über das Weiterkommen.", m:"20 Gymnastikreifen"},
+      {t:"Partner finden", l:"U11", d:"Auf Signal versuchen sich zwei Spieler eines Teams zu fassen, bevor ein Gegner sie berührt.", m:"Bändeli", v:"Mit/ohne Ball"},
+      {t:"Rundlauf-Sitzball", l:"U13", d:"Läufer umrunden ein markiertes Feld und sammeln Malstäbe, während Werfer aus der Mitte versuchen, sie zu treffen.", m:"Softbälle, 4 Markierstäbe"},
+      {t:"Emmentaler drehen", l:"U11", d:"Zwei Teams drehen innert einer Minute möglichst viele zugeteilte Mattenseiten auf ihre Farbe.", m:"Eine Matte pro Spieler"},
+      {t:"Vier gewinnt", l:"U11", d:"Läufer tragen abwechselnd Spielsteine zu einem grossen „Vier gewinnt“-Spiel; Team mit vier in einer Reihe gewinnt.", m:"Grosses Vier-gewinnt-Set"},
+      {t:"Schuh-Unihockey", l:"U11", d:"Zwei Teams spielen mit dem eigenen Schuh als Schläger auf eine markierte Torlinie.", m:"Unihockeyball", v:"Mit/ohne Torhüter; variable Torgrösse"},
+      {t:"Verfolgungsjagd", l:"U11", d:"Zwei Teams laufen diagonal aufeinander los um ein Feld mit Markierstäben; wer den Gegner einholt, gewinnt.", m:"4 Markierstäbe", v:"Sehr intensiv — mit Stock/Ball entschärfen"},
+      {t:"Verteidigungsball", l:"U11", d:"2–3 Verteidiger schützen 5 Kegel in der Mitte gegen Werfer im Kreis.", m:"1–3 weiche Bälle, 5 Kegel"},
+      {t:"Reboundball", l:"U11", d:"Zwei Mannschaften spielen den Ball an die Wand, Mitspieler fängt; max. 2 Schritte, max. 3 Sekunden Ballbesitz.", m:"Volley- oder Unihockeyball"},
+      {t:"Töggeli-Transport", l:"U11", d:"Staffette: Markierkegel werden geholt, in Reifen platziert und über das Feld weitergetragen.", m:"4 Markierkegel, 8–10 Holzreifen"},
+      {t:"Flipper-Töggeli", l:"U13", d:"In Liegestütz-Position versuchen zwei Spieler, ein Hütchen mit der Hand ins gegnerische Tor zu flippern.", m:"5 Hütchen pro Team", v:"Achtung auf saubere Körperhaltung"},
+      {t:"Spinnen-Fangis", l:"U9", d:"Alle bewegen sich nur als „Spinne“ auf Händen/Füssen; Fänger geben ein Markierband weiter.", m:"Markierband"},
+      {t:"Rollen und Springen", l:"U13", d:"Gruppen im Unterarmstütz: Der Vorderste springt über alle, legt sich an, danach rollen alle einmal.", m:"Keins"},
+      {t:"Töggeli klauen", l:"U11", d:"Zwei Spieler versuchen gleichzeitig, ein Töggeli über eine Linie zu bringen oder den Gegner zu fangen.", m:"Ein Töggeli pro Paar"},
+      {t:"Römisches Wagenrennen", l:"U9", d:"Gruppen ziehen eine umgedrehte Minimatte als Wagen über die Halle und wechseln die Rollen.", m:"Eine Minimatte pro Gruppe"},
+      {t:"Pass in den Ring", l:"U11", d:"Punkt für das Team, dem ein Pass zu einem Mitspieler in einem der verteilten Ringe gelingt.", m:"Mehrere Ringe, ein Handball", v:"Mit Stock und Ball"},
+      {t:"Matten-Fangis", l:"U9", d:"Fänger jagen die Gruppe; auf einer Matte sind maximal zwei Personen geschützt.", m:"Einige Matten"},
+      {t:"Riesen-Pingpong", l:"U13", d:"Mit Matten und Langbank als „Tisch“ wird Rundlauf-Tischtennis mit dem Gymnastikball gespielt.", m:"Matten, Gymnastikball, Langbank"},
+      {t:"Töggeli sammeln und verteilen", l:"U9", d:"Ein Spieler sammelt drei in Abständen aufgestellte Töggeli, der nächste verteilt sie wieder — je ein Töggeli pro Lauf.", m:"3 Töggeli pro Team", v:"Zuerst gut aufwärmen, sehr intensiv"},
+      {t:"Inseln bewegen", l:"U9", d:"Mit je zwei Ringen die Halle überqueren, ohne den Boden zu berühren — Ringe mit dem Stock verschieben.", m:"2 Ringe pro Person"},
+      {t:"Reagiere und schnappe", l:"U9", d:"Zwei Spieler sitzen sich gegenüber; auf Pfiff schnappen beide nach dem Ball zwischen ihnen.", m:"Keins", v:"Uhren/Ringe vorher ablegen"}
+    ],
+    passen: [
+      {t:"Technik-Clip: Pass gezogen", l:"U9", d:"Technikvideo zur Grundform des gezogenen Passes — als Einstieg vor den Passübungen zeigen.", m:"Bildschirm/Video"},
+      {t:"Technik-Clip: Handgelenk-Pass", l:"U9", d:"Technikvideo zum Handgelenkpass — als Einstieg vor den Passübungen zeigen.", m:"Bildschirm/Video"},
+      {t:"Kurzpass-Challenge", l:"U11", d:"Zwei Spieler stehen sich im Abstand von 5 m gegenüber und spielen aus dem Stand verschiedene Passformen.", m:"Ball pro Paar", v:"Vorhand, Rückhand, liegende Acht, Flip, Volley, Two-Touch"},
+      {t:"Pass um die Matte", l:"U9", d:"Zwei Spieler stehen sich an einer kleinen Matte gegenüber und passen den Ball um die Matte herum hin und zurück.", m:"Kleine Matte, Ball pro Paar", v:"Richtung wechseln"},
+      {t:"2 vs. 2 mit Passstationen", l:"U11", d:"Torloses Spiel: Zwei gegen zwei erzielen möglichst viele Pässe, zusätzliche Passstationen stehen fix an der Bande.", m:"Ball"},
+      {t:"Mattenboccia", l:"U11", d:"Zwei Spieler versuchen von einem Abschlagplatz mit Bogenbällen eine gemeinsame Matte zu treffen — Treffer zählen Punkte.", m:"Matte, Ball pro Spieler", v:"Gezogen, Handgelenk, geschlagen"},
+      {t:"Unihockey-Tennis", l:"U11", d:"Eine Langbank teilt das Feld; zwei gegen zwei wird Tennis mit Stock und Ball gespielt, der Ball darf einmal aufspringen.", m:"Langbank, Hütchen", v:"Auch als 3 vs. 3 mit Volleyball-Regeln"},
+      {t:"Drehpass-Achteck", l:"U11", d:"Der Startspieler umläuft ein Hütchen, spielt einen Diagonalpass in einer liegenden Acht und läuft dem Ball nach.", m:"4 Hütchen, ein Ball", v:"Gezogen, Rückhand oder Handgelenk"},
+      {t:"Trippel-Pass", l:"U9", d:"Drei Spieler stehen in einer Linie im Abstand von ca. 3 m; die mittlere Person passt abwechselnd nach links und rechts.", m:"Ball", v:"Tempo steigern, Positionen rotieren"}
+    ],
+    schiessen: [
+      {t:"Triff genau", l:"U9", d:"Ein Coach quert versteckt hinter einer Matte die Halle und bestimmt die Schussart, mit der er getroffen werden soll.", m:"Bälle, Matte", v:"Torhüter übernimmt statt Coach"},
+      {t:"Doppelpass-Drehschuss", l:"U11", d:"Zwei Gruppen spielen auf dem Weg zum Tor einen Doppelpass, ziehen um eine Markierung und schliessen mit Drehschuss ab.", m:"Markierungen, Tor", v:"Rückhandabschluss; Laufrichtung wechseln"},
+      {t:"Drehpass-Drill", l:"U11", d:"Slalom durch Markierungen mit Ball, Ball abdecken, danach kontrolliert drehen und scharf zur Bande abschliessen.", m:"Markierungen, Bälle", v:"Backhand-Abschluss"},
+      {t:"Drehschuss aus Schlange", l:"U9", d:"In Kolonne durch W-förmige Markierungen laufen und vor dem Tor mit Dreh-, Rückhand- oder Handgelenkschuss abschliessen.", m:"Markierungen, Tor, Bälle", v:"Zwei Teams gegeneinander"},
+      {t:"Pylonen treffen", l:"U9", d:"Teams versuchen, auf einer Langbank aufgestellte Pylonen von einer Markierungslinie aus abzuschiessen.", m:"Pylonen, Langbank", v:"Technikaufgabe vor dem Schuss; schwerere Objekte für Schusskraft"},
+      {t:"Bölzi-Spiel", l:"U11", d:"Zwei Spieler stehen sich mit je einem eigenen Tor im Abstand von 18–25 m gegenüber und spielen 1 gegen 1 in der eigenen Hälfte.", m:"2 Tore, Bälle", v:"Schussdistanz erhöhen"}
+    ],
+    ballfuehren: [
+      {t:"Technik-Clip: Ballführung-Pirouette", l:"U9", d:"Technikvideo zur Pirouette in der Ballführung — als Einstieg zeigen.", m:"Bildschirm/Video"},
+      {t:"Technik-Clip: Ballführung-Ausdrehen", l:"U9", d:"Technikvideo zum Ausdrehen mit Ball — als Einstieg zeigen.", m:"Bildschirm/Video"},
+      {t:"Reaktions-Viereck", l:"U9", d:"Vier farbige Markierungen im Abstand von 2 m; auf Zuruf möglichst schnell zur genannten Markierung dribbeln.", m:"4 Markierungen", v:"Ausrichtung vorgeben statt zurufen"},
+      {t:"Katz und Maus", l:"U9", d:"Verfolgungsjagd um einen Halbkreis: Beim Linienübergang wird aus der Katze eine Maus, die gefangen werden muss.", m:"Markierkegel", v:"Zwei Teams; nur Vorhand oder nur Backhand"},
+      {t:"Kreis-Contest", l:"U9", d:"Alle dribbeln im Kreis; die aufgerufene Person dreht den Schläger kopfüber und versucht, anderen den Ball wegzuspielen.", m:"Bälle"},
+      {t:"1 vs. 1 Ligaturnier", l:"U11", d:"Kleine Hütchentore an den Längsseiten; 1 gegen 1 in einer Liga mit Auf- und Abstieg zwischen den Feldern.", m:"Hütchen", v:"Auch als 2 vs. 2 oder 3 vs. 3"},
+      {t:"Gleichgewichts-Dribbling", l:"U11", d:"Ein Spieler dribbelt um zwei Markierungen, während ihn ein zweiter Spieler mit einem Gymnastikball aus dem Gleichgewicht zu bringen versucht.", m:"Markierungen, Gymnastikball"},
+      {t:"Jasskartenlauf", l:"U9", d:"Staffette: Läufer decken verkehrt liegende Jasskarten auf und dürfen nur die passende Farbe der eigenen Gruppe mitnehmen.", m:"Jasskarten-Set", v:"Ohne/mit Stock und Ball"},
+      {t:"Tic-Tac-Toe", l:"U11", d:"Intensives Stop-and-go-Laufspiel: Mit Ball zu einem Reifen laufen und ihn dort ablegen, Ziel ist eine Reihe oder Diagonale.", m:"9 Reifen, Bälle/Bändeli"},
+      {t:"Jagd im Quadrat", l:"U9", d:"In einem kleinen Hütchen-Viereck versucht ein Fänger, den Gejagten zu fangen, bevor dieser flüchten kann.", m:"4 Markierkegel", v:"Ohne/mit Ball"},
+      {t:"Wer hat Angst vor dem Grizzly-Bär?", l:"U9", d:"Ein Fänger versucht, mit dem Schläger die Bälle der anderen zu berühren; wer die Seite wechselt, hat die Runde überstanden.", m:"Keins", v:"Fänger hält den Stock verkehrt"},
+      {t:"Bälle schmuggeln", l:"U9", d:"Schmuggler bringen Bälle über die Hallenmitte, während „Polizisten“ sie zu berühren versuchen.", m:"Genügend Bälle", v:"Auch ohne Ball als Einstieg"},
+      {t:"Arena 1 vs. 1", l:"U9", d:"Mit Langbänken ein kleines Feld abstecken und darin 1 gegen 1 spielen; Mitspieler oder Malstäbe dienen als Tor.", m:"Langbänke", v:"Auch als 2 gegen 2 auf grösserem Feld"},
+      {t:"Nest suchen", l:"U9", d:"Bei Musik frei durch die Halle dribbeln, bei Stopp muss der Ball in einem Ring fixiert werden — ein Ring weniger als Spieler.", m:"Ein Ring pro Spieler minus eins"},
+      {t:"Unihockey-Biathlon", l:"U11", d:"2er-Teams laufen einen markierten Rundlauf mit Ball und schliessen mit einem Schuss auf ein Ziel ab; Fehlschuss bedeutet eine Strafrunde.", m:"Markierungen, Ziel, Bälle", v:"Pässe, Slaloms oder Drehungen einbauen"}
+    ],
+    spielen: [
+      {t:"2 vs. 2 mit Passstationen", l:"U11", d:"Torloses Spiel: Zwei gegen zwei erzielen möglichst viele Pässe, zusätzliche Passstationen stehen fix an der Bande.", m:"Ball"},
+      {t:"Schwedenkasten-Abbau", l:"U9", d:"Tore entstehen nur durch die obere Öffnung eines Schwedenkastens; bei einem Treffer darf ein Kastenelement entfernt werden.", m:"2 Schwedenkästen", v:"Variante ohne Elemente zu Beginn"}
+    ]
+  };
+
+  var FOCUS_META = {
+    passen:{label:"Passen"},
+    schiessen:{label:"Schiessen"},
+    ballfuehren:{label:"Ballführen"}
+  };
+
+  var state = {level:null, focus:null, plan:null};
+
+  function idx(l){return LEVELS.indexOf(l);}
+  function pool(cat, level){
+    return EXERCISES[cat].filter(function(e){return idx(e.l) <= idx(level);});
+  }
+  function pick(list, exclude){
+    var options = exclude ? list.filter(function(e){return e !== exclude;}) : list.slice();
+    if(!options.length) options = list;
+    return options[Math.floor(Math.random()*options.length)];
+  }
+  function pickTwoDistinct(list){
+    var a = pick(list);
+    var rest = list.filter(function(e){return e !== a;});
+    var b = pick(rest.length ? rest : list, a);
+    return [a,b];
+  }
+
+  var levelRow = document.getElementById("levelRow");
+  var focusRow = document.getElementById("focusRow");
+  var goBtn = document.getElementById("goBtn");
+  var planArea = document.getElementById("planArea");
+
+  LEVELS.forEach(function(l){
+    var b = document.createElement("button");
+    b.className = "chip-btn";
+    b.textContent = l;
+    b.onclick = function(){
+      state.level = l;
+      Array.prototype.forEach.call(levelRow.children, function(c){c.classList.remove("active");});
+      b.classList.add("active");
+      updateGoBtn();
+    };
+    levelRow.appendChild(b);
+  });
+
+  Object.keys(FOCUS_META).forEach(function(f){
+    var b = document.createElement("button");
+    b.className = "chip-btn";
+    b.textContent = FOCUS_META[f].label;
+    b.onclick = function(){
+      state.focus = f;
+      Array.prototype.forEach.call(focusRow.children, function(c){c.classList.remove("active","focus-accent");});
+      b.classList.add("active","focus-accent");
+      updateGoBtn();
+    };
+    focusRow.appendChild(b);
+  });
+
+  function updateGoBtn(){
+    goBtn.disabled = !(state.level && state.focus);
+  }
+
+  function buildPlan(){
+    var warm = pick(pool("warmup", state.level));
+    var pair = pickTwoDistinct(pool(state.focus, state.level));
+    var play = pick(pool("spielen", state.level));
+    state.plan = {warm:warm, focus:pair, play:play};
+    renderPlan();
+  }
+
+  function rerollSlot(kind, idx2){
+    if(kind === "warm"){
+      state.plan.warm = pick(pool("warmup", state.level), state.plan.warm);
+    } else if(kind === "focus"){
+      var others = state.plan.focus.filter(function(_,i){return i!==idx2;});
+      var full = pool(state.focus, state.level).filter(function(e){return others.indexOf(e)===-1;});
+      state.plan.focus[idx2] = pick(full.length?full:pool(state.focus,state.level), state.plan.focus[idx2]);
+    } else if(kind === "play"){
+      state.plan.play = pick(pool("spielen", state.level), state.plan.play);
+    }
+    renderPlan();
+  }
+
+  function metaLine(ex){
+    var parts = [];
+    if(ex.m) parts.push("<b>Material:</b> " + ex.m);
+    if(ex.v) parts.push("<b>Variation:</b> " + ex.v);
+    return parts.join(" &nbsp;&middot;&nbsp; ");
+  }
+
+  function blockHtml(kindClass, tagText, tagClass, durText, levelText, ex, onReroll){
+    var div = document.createElement("div");
+    div.className = "block " + kindClass;
+    div.innerHTML =
+      '<div class="block-top">' +
+        '<div class="block-tags">' +
+          '<span class="tag ' + tagClass + '">' + tagText + '</span>' +
+          '<span class="tag t-dur">' + durText + '</span>' +
+          '<span class="tag">' + levelLabel[ex.l] + '</span>' +
+        '</div>' +
+        '<button class="reroll" type="button">&#8635; andere</button>' +
+      '</div>' +
+      '<h3>' + ex.t + '</h3>' +
+      '<p>' + ex.d + '</p>' +
+      '<div class="meta">' + metaLine(ex) + '</div>';
+    div.querySelector(".reroll").onclick = onReroll;
+    return div;
+  }
+
+  function renderPlan(){
+    planArea.innerHTML = "";
+    if(!state.plan) return;
+
+    var head = document.createElement("div");
+    head.className = "plan-head";
+    head.innerHTML = '<h2>Trainingsplan &middot; ' + state.level + ' &middot; ' + FOCUS_META[state.focus].label + '</h2><span class="plan-total">&asymp; 85 Min. total</span>';
+    planArea.appendChild(head);
+
+    planArea.appendChild(blockHtml("k-warmup","Warmup","", "10 Min.", "", state.plan.warm, function(){rerollSlot("warm");}));
+    planArea.appendChild(blockHtml("k-schwerpunkt", FOCUS_META[state.focus].label + " 1", "t-accent", "15 Min.", "", state.plan.focus[0], function(){rerollSlot("focus",0);}));
+    planArea.appendChild(blockHtml("k-schwerpunkt", FOCUS_META[state.focus].label + " 2", "t-accent", "15 Min.", "", state.plan.focus[1], function(){rerollSlot("focus",1);}));
+    planArea.appendChild(blockHtml("k-spielen","Spielen","t-slate", "15 Min.", "", state.plan.play, function(){rerollSlot("play");}));
+
+    var match = document.createElement("div");
+    match.className = "block k-match";
+    match.innerHTML =
+      '<div class="block-top"><div class="block-tags"><span class="tag" style="background:#EAEAE2;color:var(--ink)">Mätschle</span><span class="tag t-dur">30 Min.</span></div></div>' +
+      '<h3>Freies Spiel</h3><p>Zum Abschluss 30 Minuten Mätschle in gemischten Teams.</p>';
+    planArea.appendChild(match);
+
+    var actions = document.createElement("div");
+    actions.className = "actions-row";
+    actions.innerHTML = '<button class="ghost-btn" id="reshuffleBtn">&#8635; Ganzen Plan neu mischen</button><button class="ghost-btn" id="printBtn">Drucken</button>';
+    planArea.appendChild(actions);
+    document.getElementById("reshuffleBtn").onclick = buildPlan;
+    document.getElementById("printBtn").onclick = function(){window.print();};
+  }
+
+  goBtn.onclick = buildPlan;
+})();
+</script>
