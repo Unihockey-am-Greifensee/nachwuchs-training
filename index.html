@@ -48,6 +48,24 @@
     margin:2px 0 0;
     text-wrap:balance;
   }
+  .header-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+  }
+  .site-logo{
+    flex:none;
+    width:52px;
+    height:52px;
+    object-fit:contain;
+  }
+  .footer{
+    text-align:center;
+    font-size:12px;
+    color:var(--ink-soft);
+    padding-top:8px;
+  }
   .sub{
     font-size:14.5px;
     color:var(--ink-soft);
@@ -291,8 +309,9 @@
 </style>
 
 <div class="wrap">
-  <div>
+  <div class="header-row">
     <h1>Trainingsplan-Generator</h1>
+    <img class="site-logo" src="Grizzlys_512x512.png" alt="Grizzlys Logo" onerror="this.style.display='none'">
   </div>
 
   <div class="panel">
@@ -308,6 +327,8 @@
   </div>
 
   <div id="planArea"></div>
+
+  <div class="footer">&copy; <span id="year"></span> Grizzlys Unihockey am Greifensee</div>
 </div>
 
 <script>
@@ -563,5 +584,6 @@
   }
 
   goBtn.onclick = buildPlan;
+  document.getElementById("year").textContent = new Date().getFullYear();
 })();
 </script>
