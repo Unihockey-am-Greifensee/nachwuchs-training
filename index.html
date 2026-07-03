@@ -210,6 +210,15 @@
   }
   .block .meta b{color:var(--ink);}
 
+  .video-link{
+    align-self:flex-start;
+    font-size:12.5px;
+    font-weight:700;
+    color:var(--slate-ink);
+    text-decoration:none;
+  }
+  .video-link:hover{text-decoration:underline;}
+
   .actions-row{
     display:flex;
     gap:10px;
@@ -244,9 +253,7 @@
 
 <div class="wrap">
   <div>
-    <div class="eyebrow">Grizzlys &middot; Kleinfeld</div>
     <h1>Trainingsplan-Generator</h1>
-    <p class="sub">Stufe und Schwerpunkt wählen &mdash; der Generator stellt Warmup, zwei Schwerpunkt-Übungen, eine Spielform und die Mätschlizeit zusammen.</p>
   </div>
 
   <div class="panel">
@@ -262,10 +269,6 @@
   </div>
 
   <div id="planArea"></div>
-
-  <div class="hint">
-    Übungsdatenbank aus <b>coach.grizzlys.club/startseite/kleinfeld</b> übertragen (Warmup, Passen, Schiessen, Ballführen, Spielen). Neue Übungen lassen sich im Quelltext im <code>EXERCISES</code>-Objekt ergänzen &mdash; pro Eintrag Titel, Mindeststufe, Beschreibung, Material. Die Kategorie <b>Spielen</b> hat aktuell nur 2 erfasste Einträge; für mehr Abwechslung lohnt sich dort eine Ergänzung.
-  </div>
 </div>
 
 <script>
@@ -275,71 +278,71 @@
 
   var EXERCISES = {
     warmup: [
-      {t:"Komm mit, lauf weg", l:"U9", d:"Im Kreis berührt ein Fänger von aussen jemanden und ruft „komm mit“ oder „lauf weg“. Beide laufen um den Kreis, wer zuerst die Lücke erreicht, bleibt stehen.", m:"Keins", v:"Mit/ohne Stock und Ball; Spieler sitzen oder stehen"},
-      {t:"Tatzelwurm", l:"U9", d:"Ring-Formation: Ein Fänger muss eine Person fangen, während die anderen den Ring drehend schützen.", m:"Keins"},
-      {t:"Schiffe versenken", l:"U9", d:"1–3 Fänger versuchen mit weichen Bällen, Bälle durch Gymnastikreifen zu werfen. Versenkte Spieler können erlöst werden.", m:"Ein Reifen pro Spieler, 1–3 weiche Bälle", v:"Rollentausch; Aufgaben für Versenkte"},
-      {t:"Unihockey-Handball", l:"U9", d:"Zwei Teams spielen mit dem Ball in der Hand. Ballträger darf einen Schritt machen, dann passen oder werfen.", m:"Tore, Unihockeyball", v:"Mit zwei Bällen gleichzeitig"},
-      {t:"Schere-Stein-Papier-Hüpfen", l:"U9", d:"Teams hüpfen durch eine Ringkolonne aufeinander zu; treffen sie sich, entscheidet Schere-Stein-Papier über das Weiterkommen.", m:"20 Gymnastikreifen"},
-      {t:"Partner finden", l:"U11", d:"Auf Signal versuchen sich zwei Spieler eines Teams zu fassen, bevor ein Gegner sie berührt.", m:"Bändeli", v:"Mit/ohne Ball"},
-      {t:"Rundlauf-Sitzball", l:"U13", d:"Läufer umrunden ein markiertes Feld und sammeln Malstäbe, während Werfer aus der Mitte versuchen, sie zu treffen.", m:"Softbälle, 4 Markierstäbe"},
-      {t:"Emmentaler drehen", l:"U11", d:"Zwei Teams drehen innert einer Minute möglichst viele zugeteilte Mattenseiten auf ihre Farbe.", m:"Eine Matte pro Spieler"},
-      {t:"Vier gewinnt", l:"U11", d:"Läufer tragen abwechselnd Spielsteine zu einem grossen „Vier gewinnt“-Spiel; Team mit vier in einer Reihe gewinnt.", m:"Grosses Vier-gewinnt-Set"},
-      {t:"Schuh-Unihockey", l:"U11", d:"Zwei Teams spielen mit dem eigenen Schuh als Schläger auf eine markierte Torlinie.", m:"Unihockeyball", v:"Mit/ohne Torhüter; variable Torgrösse"},
-      {t:"Verfolgungsjagd", l:"U11", d:"Zwei Teams laufen diagonal aufeinander los um ein Feld mit Markierstäben; wer den Gegner einholt, gewinnt.", m:"4 Markierstäbe", v:"Sehr intensiv — mit Stock/Ball entschärfen"},
-      {t:"Verteidigungsball", l:"U11", d:"2–3 Verteidiger schützen 5 Kegel in der Mitte gegen Werfer im Kreis.", m:"1–3 weiche Bälle, 5 Kegel"},
-      {t:"Reboundball", l:"U11", d:"Zwei Mannschaften spielen den Ball an die Wand, Mitspieler fängt; max. 2 Schritte, max. 3 Sekunden Ballbesitz.", m:"Volley- oder Unihockeyball"},
-      {t:"Töggeli-Transport", l:"U11", d:"Staffette: Markierkegel werden geholt, in Reifen platziert und über das Feld weitergetragen.", m:"4 Markierkegel, 8–10 Holzreifen"},
-      {t:"Flipper-Töggeli", l:"U13", d:"In Liegestütz-Position versuchen zwei Spieler, ein Hütchen mit der Hand ins gegnerische Tor zu flippern.", m:"5 Hütchen pro Team", v:"Achtung auf saubere Körperhaltung"},
-      {t:"Spinnen-Fangis", l:"U9", d:"Alle bewegen sich nur als „Spinne“ auf Händen/Füssen; Fänger geben ein Markierband weiter.", m:"Markierband"},
-      {t:"Rollen und Springen", l:"U13", d:"Gruppen im Unterarmstütz: Der Vorderste springt über alle, legt sich an, danach rollen alle einmal.", m:"Keins"},
-      {t:"Töggeli klauen", l:"U11", d:"Zwei Spieler versuchen gleichzeitig, ein Töggeli über eine Linie zu bringen oder den Gegner zu fangen.", m:"Ein Töggeli pro Paar"},
-      {t:"Römisches Wagenrennen", l:"U9", d:"Gruppen ziehen eine umgedrehte Minimatte als Wagen über die Halle und wechseln die Rollen.", m:"Eine Minimatte pro Gruppe"},
-      {t:"Pass in den Ring", l:"U11", d:"Punkt für das Team, dem ein Pass zu einem Mitspieler in einem der verteilten Ringe gelingt.", m:"Mehrere Ringe, ein Handball", v:"Mit Stock und Ball"},
-      {t:"Matten-Fangis", l:"U9", d:"Fänger jagen die Gruppe; auf einer Matte sind maximal zwei Personen geschützt.", m:"Einige Matten"},
-      {t:"Riesen-Pingpong", l:"U13", d:"Mit Matten und Langbank als „Tisch“ wird Rundlauf-Tischtennis mit dem Gymnastikball gespielt.", m:"Matten, Gymnastikball, Langbank"},
-      {t:"Töggeli sammeln und verteilen", l:"U9", d:"Ein Spieler sammelt drei in Abständen aufgestellte Töggeli, der nächste verteilt sie wieder — je ein Töggeli pro Lauf.", m:"3 Töggeli pro Team", v:"Zuerst gut aufwärmen, sehr intensiv"},
-      {t:"Inseln bewegen", l:"U9", d:"Mit je zwei Ringen die Halle überqueren, ohne den Boden zu berühren — Ringe mit dem Stock verschieben.", m:"2 Ringe pro Person"},
-      {t:"Reagiere und schnappe", l:"U9", d:"Zwei Spieler sitzen sich gegenüber; auf Pfiff schnappen beide nach dem Ball zwischen ihnen.", m:"Keins", v:"Uhren/Ringe vorher ablegen"}
+      {t:"Komm mit, lauf weg", l:"U9", y:"InwDmelvcDA", d:"Im Kreis berührt ein Fänger von aussen jemanden und ruft „komm mit“ oder „lauf weg“. Beide laufen um den Kreis, wer zuerst die Lücke erreicht, bleibt stehen.", m:"Keins", v:"Mit/ohne Stock und Ball; Spieler sitzen oder stehen"},
+      {t:"Tatzelwurm", l:"U9", y:"8axxoZIWWrU", d:"Ring-Formation: Ein Fänger muss eine Person fangen, während die anderen den Ring drehend schützen.", m:"Keins"},
+      {t:"Schiffe versenken", l:"U9", y:"NtMzBhME95g", d:"1–3 Fänger versuchen mit weichen Bällen, Bälle durch Gymnastikreifen zu werfen. Versenkte Spieler können erlöst werden.", m:"Ein Reifen pro Spieler, 1–3 weiche Bälle", v:"Rollentausch; Aufgaben für Versenkte"},
+      {t:"Unihockey-Handball", l:"U9", y:"1RIveKOXBy0", d:"Zwei Teams spielen mit dem Ball in der Hand. Ballträger darf einen Schritt machen, dann passen oder werfen.", m:"Tore, Unihockeyball", v:"Mit zwei Bällen gleichzeitig"},
+      {t:"Schere-Stein-Papier-Hüpfen", l:"U9", y:"M5HulfS1vfc", d:"Teams hüpfen durch eine Ringkolonne aufeinander zu; treffen sie sich, entscheidet Schere-Stein-Papier über das Weiterkommen.", m:"20 Gymnastikreifen"},
+      {t:"Partner finden", l:"U11", y:"vIgIIlbPxxg", d:"Auf Signal versuchen sich zwei Spieler eines Teams zu fassen, bevor ein Gegner sie berührt.", m:"Bändeli", v:"Mit/ohne Ball"},
+      {t:"Rundlauf-Sitzball", l:"U13", y:"-CKFTxiCk8M", d:"Läufer umrunden ein markiertes Feld und sammeln Malstäbe, während Werfer aus der Mitte versuchen, sie zu treffen.", m:"Softbälle, 4 Markierstäbe"},
+      {t:"Emmentaler drehen", l:"U11", y:"W-EDu_RrpCA", d:"Zwei Teams drehen innert einer Minute möglichst viele zugeteilte Mattenseiten auf ihre Farbe.", m:"Eine Matte pro Spieler"},
+      {t:"Vier gewinnt", l:"U11", y:"b1dT-wxP_wM", d:"Läufer tragen abwechselnd Spielsteine zu einem grossen „Vier gewinnt“-Spiel; Team mit vier in einer Reihe gewinnt.", m:"Grosses Vier-gewinnt-Set"},
+      {t:"Schuh-Unihockey", l:"U11", y:"QM6vZ4J2Yb0", d:"Zwei Teams spielen mit dem eigenen Schuh als Schläger auf eine markierte Torlinie.", m:"Unihockeyball", v:"Mit/ohne Torhüter; variable Torgrösse"},
+      {t:"Verfolgungsjagd", l:"U11", y:"4QB_QRDm2ps", d:"Zwei Teams laufen diagonal aufeinander los um ein Feld mit Markierstäben; wer den Gegner einholt, gewinnt.", m:"4 Markierstäbe", v:"Sehr intensiv — mit Stock/Ball entschärfen"},
+      {t:"Verteidigungsball", l:"U11", y:"YNqjZtiFsIQ", d:"2–3 Verteidiger schützen 5 Kegel in der Mitte gegen Werfer im Kreis.", m:"1–3 weiche Bälle, 5 Kegel"},
+      {t:"Reboundball", l:"U11", y:"TFx_qetdHzw", d:"Zwei Mannschaften spielen den Ball an die Wand, Mitspieler fängt; max. 2 Schritte, max. 3 Sekunden Ballbesitz.", m:"Volley- oder Unihockeyball"},
+      {t:"Töggeli-Transport", l:"U11", y:"CBiCLJ2t_PU", d:"Staffette: Markierkegel werden geholt, in Reifen platziert und über das Feld weitergetragen.", m:"4 Markierkegel, 8–10 Holzreifen"},
+      {t:"Flipper-Töggeli", l:"U13", y:"7MYtdesEX9g", d:"In Liegestütz-Position versuchen zwei Spieler, ein Hütchen mit der Hand ins gegnerische Tor zu flippern.", m:"5 Hütchen pro Team", v:"Achtung auf saubere Körperhaltung"},
+      {t:"Spinnen-Fangis", l:"U9", y:"PZrFAiNdTag", d:"Alle bewegen sich nur als „Spinne“ auf Händen/Füssen; Fänger geben ein Markierband weiter.", m:"Markierband"},
+      {t:"Rollen und Springen", l:"U13", y:"ztvrMvSBVcs", d:"Gruppen im Unterarmstütz: Der Vorderste springt über alle, legt sich an, danach rollen alle einmal.", m:"Keins"},
+      {t:"Töggeli klauen", l:"U11", y:"cDfSgaiSJm4", d:"Zwei Spieler versuchen gleichzeitig, ein Töggeli über eine Linie zu bringen oder den Gegner zu fangen.", m:"Ein Töggeli pro Paar"},
+      {t:"Römisches Wagenrennen", l:"U9", y:"iN1QowGrogU", d:"Gruppen ziehen eine umgedrehte Minimatte als Wagen über die Halle und wechseln die Rollen.", m:"Eine Minimatte pro Gruppe"},
+      {t:"Pass in den Ring", l:"U11", y:"O0_Uj7-_Lak", d:"Punkt für das Team, dem ein Pass zu einem Mitspieler in einem der verteilten Ringe gelingt.", m:"Mehrere Ringe, ein Handball", v:"Mit Stock und Ball"},
+      {t:"Matten-Fangis", l:"U9", y:"0UHvTYQJCUo", d:"Fänger jagen die Gruppe; auf einer Matte sind maximal zwei Personen geschützt.", m:"Einige Matten"},
+      {t:"Riesen-Pingpong", l:"U13", y:"CuaXP2B6LC4", d:"Mit Matten und Langbank als „Tisch“ wird Rundlauf-Tischtennis mit dem Gymnastikball gespielt.", m:"Matten, Gymnastikball, Langbank"},
+      {t:"Töggeli sammeln und verteilen", l:"U9", y:"jbB24qDpl0o", d:"Ein Spieler sammelt drei in Abständen aufgestellte Töggeli, der nächste verteilt sie wieder — je ein Töggeli pro Lauf.", m:"3 Töggeli pro Team", v:"Zuerst gut aufwärmen, sehr intensiv"},
+      {t:"Inseln bewegen", l:"U9", y:"fT2v6hUTy88", d:"Mit je zwei Ringen die Halle überqueren, ohne den Boden zu berühren — Ringe mit dem Stock verschieben.", m:"2 Ringe pro Person"},
+      {t:"Reagiere und schnappe", l:"U9", y:"gJgoCdmHiRM", d:"Zwei Spieler sitzen sich gegenüber; auf Pfiff schnappen beide nach dem Ball zwischen ihnen.", m:"Keins", v:"Uhren/Ringe vorher ablegen"}
     ],
     passen: [
-      {t:"Technik-Clip: Pass gezogen", l:"U9", d:"Technikvideo zur Grundform des gezogenen Passes — als Einstieg vor den Passübungen zeigen.", m:"Bildschirm/Video"},
-      {t:"Technik-Clip: Handgelenk-Pass", l:"U9", d:"Technikvideo zum Handgelenkpass — als Einstieg vor den Passübungen zeigen.", m:"Bildschirm/Video"},
-      {t:"Kurzpass-Challenge", l:"U11", d:"Zwei Spieler stehen sich im Abstand von 5 m gegenüber und spielen aus dem Stand verschiedene Passformen.", m:"Ball pro Paar", v:"Vorhand, Rückhand, liegende Acht, Flip, Volley, Two-Touch"},
-      {t:"Pass um die Matte", l:"U9", d:"Zwei Spieler stehen sich an einer kleinen Matte gegenüber und passen den Ball um die Matte herum hin und zurück.", m:"Kleine Matte, Ball pro Paar", v:"Richtung wechseln"},
-      {t:"2 vs. 2 mit Passstationen", l:"U11", d:"Torloses Spiel: Zwei gegen zwei erzielen möglichst viele Pässe, zusätzliche Passstationen stehen fix an der Bande.", m:"Ball"},
-      {t:"Mattenboccia", l:"U11", d:"Zwei Spieler versuchen von einem Abschlagplatz mit Bogenbällen eine gemeinsame Matte zu treffen — Treffer zählen Punkte.", m:"Matte, Ball pro Spieler", v:"Gezogen, Handgelenk, geschlagen"},
-      {t:"Unihockey-Tennis", l:"U11", d:"Eine Langbank teilt das Feld; zwei gegen zwei wird Tennis mit Stock und Ball gespielt, der Ball darf einmal aufspringen.", m:"Langbank, Hütchen", v:"Auch als 3 vs. 3 mit Volleyball-Regeln"},
-      {t:"Drehpass-Achteck", l:"U11", d:"Der Startspieler umläuft ein Hütchen, spielt einen Diagonalpass in einer liegenden Acht und läuft dem Ball nach.", m:"4 Hütchen, ein Ball", v:"Gezogen, Rückhand oder Handgelenk"},
-      {t:"Trippel-Pass", l:"U9", d:"Drei Spieler stehen in einer Linie im Abstand von ca. 3 m; die mittlere Person passt abwechselnd nach links und rechts.", m:"Ball", v:"Tempo steigern, Positionen rotieren"}
+      {t:"Technik-Clip: Pass gezogen", l:"U9", y:"09q04W9Vwa8", d:"Technikvideo zur Grundform des gezogenen Passes — als Einstieg vor den Passübungen zeigen.", m:"Bildschirm/Video"},
+      {t:"Technik-Clip: Handgelenk-Pass", l:"U9", y:"NM2MhtcFOD8", d:"Technikvideo zum Handgelenkpass — als Einstieg vor den Passübungen zeigen.", m:"Bildschirm/Video"},
+      {t:"Kurzpass-Challenge", l:"U11", y:"iBxstYb_1Ks", d:"Zwei Spieler stehen sich im Abstand von 5 m gegenüber und spielen aus dem Stand verschiedene Passformen.", m:"Ball pro Paar", v:"Vorhand, Rückhand, liegende Acht, Flip, Volley, Two-Touch"},
+      {t:"Pass um die Matte", l:"U9", y:"Y2q5OgnGVFc", d:"Zwei Spieler stehen sich an einer kleinen Matte gegenüber und passen den Ball um die Matte herum hin und zurück.", m:"Kleine Matte, Ball pro Paar", v:"Richtung wechseln"},
+      {t:"2 vs. 2 mit Passstationen", l:"U11", y:"tfHj3CbYzg0", d:"Torloses Spiel: Zwei gegen zwei erzielen möglichst viele Pässe, zusätzliche Passstationen stehen fix an der Bande.", m:"Ball"},
+      {t:"Mattenboccia", l:"U11", y:"8xUSLs0Qt-I", d:"Zwei Spieler versuchen von einem Abschlagplatz mit Bogenbällen eine gemeinsame Matte zu treffen — Treffer zählen Punkte.", m:"Matte, Ball pro Spieler", v:"Gezogen, Handgelenk, geschlagen"},
+      {t:"Unihockey-Tennis", l:"U11", y:"8bkNI634zf4", d:"Eine Langbank teilt das Feld; zwei gegen zwei wird Tennis mit Stock und Ball gespielt, der Ball darf einmal aufspringen.", m:"Langbank, Hütchen", v:"Auch als 3 vs. 3 mit Volleyball-Regeln"},
+      {t:"Drehpass-Achteck", l:"U11", y:"EPWKHHGLogI", d:"Der Startspieler umläuft ein Hütchen, spielt einen Diagonalpass in einer liegenden Acht und läuft dem Ball nach.", m:"4 Hütchen, ein Ball", v:"Gezogen, Rückhand oder Handgelenk"},
+      {t:"Trippel-Pass", l:"U9", y:"6iU_yEhcI2Y", d:"Drei Spieler stehen in einer Linie im Abstand von ca. 3 m; die mittlere Person passt abwechselnd nach links und rechts.", m:"Ball", v:"Tempo steigern, Positionen rotieren"}
     ],
     schiessen: [
-      {t:"Triff genau", l:"U9", d:"Ein Coach quert versteckt hinter einer Matte die Halle und bestimmt die Schussart, mit der er getroffen werden soll.", m:"Bälle, Matte", v:"Torhüter übernimmt statt Coach"},
-      {t:"Doppelpass-Drehschuss", l:"U11", d:"Zwei Gruppen spielen auf dem Weg zum Tor einen Doppelpass, ziehen um eine Markierung und schliessen mit Drehschuss ab.", m:"Markierungen, Tor", v:"Rückhandabschluss; Laufrichtung wechseln"},
-      {t:"Drehpass-Drill", l:"U11", d:"Slalom durch Markierungen mit Ball, Ball abdecken, danach kontrolliert drehen und scharf zur Bande abschliessen.", m:"Markierungen, Bälle", v:"Backhand-Abschluss"},
-      {t:"Drehschuss aus Schlange", l:"U9", d:"In Kolonne durch W-förmige Markierungen laufen und vor dem Tor mit Dreh-, Rückhand- oder Handgelenkschuss abschliessen.", m:"Markierungen, Tor, Bälle", v:"Zwei Teams gegeneinander"},
-      {t:"Pylonen treffen", l:"U9", d:"Teams versuchen, auf einer Langbank aufgestellte Pylonen von einer Markierungslinie aus abzuschiessen.", m:"Pylonen, Langbank", v:"Technikaufgabe vor dem Schuss; schwerere Objekte für Schusskraft"},
-      {t:"Bölzi-Spiel", l:"U11", d:"Zwei Spieler stehen sich mit je einem eigenen Tor im Abstand von 18–25 m gegenüber und spielen 1 gegen 1 in der eigenen Hälfte.", m:"2 Tore, Bälle", v:"Schussdistanz erhöhen"}
+      {t:"Triff genau", l:"U9", y:"_Qqho8ecvJ8", d:"Ein Coach quert versteckt hinter einer Matte die Halle und bestimmt die Schussart, mit der er getroffen werden soll.", m:"Bälle, Matte", v:"Torhüter übernimmt statt Coach"},
+      {t:"Doppelpass-Drehschuss", l:"U11", y:"xCHKrIFmCxo", d:"Zwei Gruppen spielen auf dem Weg zum Tor einen Doppelpass, ziehen um eine Markierung und schliessen mit Drehschuss ab.", m:"Markierungen, Tor", v:"Rückhandabschluss; Laufrichtung wechseln"},
+      {t:"Drehpass-Drill", l:"U11", y:"iX409yKVIfY", d:"Slalom durch Markierungen mit Ball, Ball abdecken, danach kontrolliert drehen und scharf zur Bande abschliessen.", m:"Markierungen, Bälle", v:"Backhand-Abschluss"},
+      {t:"Drehschuss aus Schlange", l:"U9", y:"NoPiWCf9QJ8", d:"In Kolonne durch W-förmige Markierungen laufen und vor dem Tor mit Dreh-, Rückhand- oder Handgelenkschuss abschliessen.", m:"Markierungen, Tor, Bälle", v:"Zwei Teams gegeneinander"},
+      {t:"Pylonen treffen", l:"U9", y:"TQnBIZG7xlw", d:"Teams versuchen, auf einer Langbank aufgestellte Pylonen von einer Markierungslinie aus abzuschiessen.", m:"Pylonen, Langbank", v:"Technikaufgabe vor dem Schuss; schwerere Objekte für Schusskraft"},
+      {t:"Bölzi-Spiel", l:"U11", y:"YjwFsiCGNfQ", d:"Zwei Spieler stehen sich mit je einem eigenen Tor im Abstand von 18–25 m gegenüber und spielen 1 gegen 1 in der eigenen Hälfte.", m:"2 Tore, Bälle", v:"Schussdistanz erhöhen"}
     ],
     ballfuehren: [
-      {t:"Technik-Clip: Ballführung-Pirouette", l:"U9", d:"Technikvideo zur Pirouette in der Ballführung — als Einstieg zeigen.", m:"Bildschirm/Video"},
-      {t:"Technik-Clip: Ballführung-Ausdrehen", l:"U9", d:"Technikvideo zum Ausdrehen mit Ball — als Einstieg zeigen.", m:"Bildschirm/Video"},
-      {t:"Reaktions-Viereck", l:"U9", d:"Vier farbige Markierungen im Abstand von 2 m; auf Zuruf möglichst schnell zur genannten Markierung dribbeln.", m:"4 Markierungen", v:"Ausrichtung vorgeben statt zurufen"},
-      {t:"Katz und Maus", l:"U9", d:"Verfolgungsjagd um einen Halbkreis: Beim Linienübergang wird aus der Katze eine Maus, die gefangen werden muss.", m:"Markierkegel", v:"Zwei Teams; nur Vorhand oder nur Backhand"},
-      {t:"Kreis-Contest", l:"U9", d:"Alle dribbeln im Kreis; die aufgerufene Person dreht den Schläger kopfüber und versucht, anderen den Ball wegzuspielen.", m:"Bälle"},
-      {t:"1 vs. 1 Ligaturnier", l:"U11", d:"Kleine Hütchentore an den Längsseiten; 1 gegen 1 in einer Liga mit Auf- und Abstieg zwischen den Feldern.", m:"Hütchen", v:"Auch als 2 vs. 2 oder 3 vs. 3"},
-      {t:"Gleichgewichts-Dribbling", l:"U11", d:"Ein Spieler dribbelt um zwei Markierungen, während ihn ein zweiter Spieler mit einem Gymnastikball aus dem Gleichgewicht zu bringen versucht.", m:"Markierungen, Gymnastikball"},
-      {t:"Jasskartenlauf", l:"U9", d:"Staffette: Läufer decken verkehrt liegende Jasskarten auf und dürfen nur die passende Farbe der eigenen Gruppe mitnehmen.", m:"Jasskarten-Set", v:"Ohne/mit Stock und Ball"},
-      {t:"Tic-Tac-Toe", l:"U11", d:"Intensives Stop-and-go-Laufspiel: Mit Ball zu einem Reifen laufen und ihn dort ablegen, Ziel ist eine Reihe oder Diagonale.", m:"9 Reifen, Bälle/Bändeli"},
-      {t:"Jagd im Quadrat", l:"U9", d:"In einem kleinen Hütchen-Viereck versucht ein Fänger, den Gejagten zu fangen, bevor dieser flüchten kann.", m:"4 Markierkegel", v:"Ohne/mit Ball"},
-      {t:"Wer hat Angst vor dem Grizzly-Bär?", l:"U9", d:"Ein Fänger versucht, mit dem Schläger die Bälle der anderen zu berühren; wer die Seite wechselt, hat die Runde überstanden.", m:"Keins", v:"Fänger hält den Stock verkehrt"},
-      {t:"Bälle schmuggeln", l:"U9", d:"Schmuggler bringen Bälle über die Hallenmitte, während „Polizisten“ sie zu berühren versuchen.", m:"Genügend Bälle", v:"Auch ohne Ball als Einstieg"},
-      {t:"Arena 1 vs. 1", l:"U9", d:"Mit Langbänken ein kleines Feld abstecken und darin 1 gegen 1 spielen; Mitspieler oder Malstäbe dienen als Tor.", m:"Langbänke", v:"Auch als 2 gegen 2 auf grösserem Feld"},
-      {t:"Nest suchen", l:"U9", d:"Bei Musik frei durch die Halle dribbeln, bei Stopp muss der Ball in einem Ring fixiert werden — ein Ring weniger als Spieler.", m:"Ein Ring pro Spieler minus eins"},
-      {t:"Unihockey-Biathlon", l:"U11", d:"2er-Teams laufen einen markierten Rundlauf mit Ball und schliessen mit einem Schuss auf ein Ziel ab; Fehlschuss bedeutet eine Strafrunde.", m:"Markierungen, Ziel, Bälle", v:"Pässe, Slaloms oder Drehungen einbauen"}
+      {t:"Technik-Clip: Ballführung-Pirouette", l:"U9", y:"c7Zzrglzq4g", d:"Technikvideo zur Pirouette in der Ballführung — als Einstieg zeigen.", m:"Bildschirm/Video"},
+      {t:"Technik-Clip: Ballführung-Ausdrehen", l:"U9", y:"n2hk3TPayW8", d:"Technikvideo zum Ausdrehen mit Ball — als Einstieg zeigen.", m:"Bildschirm/Video"},
+      {t:"Reaktions-Viereck", l:"U9", y:"dbPS5DWl7fo", d:"Vier farbige Markierungen im Abstand von 2 m; auf Zuruf möglichst schnell zur genannten Markierung dribbeln.", m:"4 Markierungen", v:"Ausrichtung vorgeben statt zurufen"},
+      {t:"Katz und Maus", l:"U9", y:"a2Rnq1qRa8c", d:"Verfolgungsjagd um einen Halbkreis: Beim Linienübergang wird aus der Katze eine Maus, die gefangen werden muss.", m:"Markierkegel", v:"Zwei Teams; nur Vorhand oder nur Backhand"},
+      {t:"Kreis-Contest", l:"U9", y:"ilGaGxh4-bY", d:"Alle dribbeln im Kreis; die aufgerufene Person dreht den Schläger kopfüber und versucht, anderen den Ball wegzuspielen.", m:"Bälle"},
+      {t:"1 vs. 1 Ligaturnier", l:"U11", y:"WVBVhBLlmrU", d:"Kleine Hütchentore an den Längsseiten; 1 gegen 1 in einer Liga mit Auf- und Abstieg zwischen den Feldern.", m:"Hütchen", v:"Auch als 2 vs. 2 oder 3 vs. 3"},
+      {t:"Gleichgewichts-Dribbling", l:"U11", y:"ZTjTLjp5aig", d:"Ein Spieler dribbelt um zwei Markierungen, während ihn ein zweiter Spieler mit einem Gymnastikball aus dem Gleichgewicht zu bringen versucht.", m:"Markierungen, Gymnastikball"},
+      {t:"Jasskartenlauf", l:"U9", y:"NFD2-Y6mYK8", d:"Staffette: Läufer decken verkehrt liegende Jasskarten auf und dürfen nur die passende Farbe der eigenen Gruppe mitnehmen.", m:"Jasskarten-Set", v:"Ohne/mit Stock und Ball"},
+      {t:"Tic-Tac-Toe", l:"U11", y:"FECi7RyaWIM", d:"Intensives Stop-and-go-Laufspiel: Mit Ball zu einem Reifen laufen und ihn dort ablegen, Ziel ist eine Reihe oder Diagonale.", m:"9 Reifen, Bälle/Bändeli"},
+      {t:"Jagd im Quadrat", l:"U9", y:"58G4mpq9gJ8", d:"In einem kleinen Hütchen-Viereck versucht ein Fänger, den Gejagten zu fangen, bevor dieser flüchten kann.", m:"4 Markierkegel", v:"Ohne/mit Ball"},
+      {t:"Wer hat Angst vor dem Grizzly-Bär?", l:"U9", y:"hX2kg-_Q6e0", d:"Ein Fänger versucht, mit dem Schläger die Bälle der anderen zu berühren; wer die Seite wechselt, hat die Runde überstanden.", m:"Keins", v:"Fänger hält den Stock verkehrt"},
+      {t:"Bälle schmuggeln", l:"U9", y:"6O31hsaeLIc", d:"Schmuggler bringen Bälle über die Hallenmitte, während „Polizisten“ sie zu berühren versuchen.", m:"Genügend Bälle", v:"Auch ohne Ball als Einstieg"},
+      {t:"Arena 1 vs. 1", l:"U9", y:"6ck7m2jW7z4", d:"Mit Langbänken ein kleines Feld abstecken und darin 1 gegen 1 spielen; Mitspieler oder Malstäbe dienen als Tor.", m:"Langbänke", v:"Auch als 2 gegen 2 auf grösserem Feld"},
+      {t:"Nest suchen", l:"U9", y:"z-FRgn2_MJA", d:"Bei Musik frei durch die Halle dribbeln, bei Stopp muss der Ball in einem Ring fixiert werden — ein Ring weniger als Spieler.", m:"Ein Ring pro Spieler minus eins"},
+      {t:"Unihockey-Biathlon", l:"U11", y:"C10F7sJOjJE", d:"2er-Teams laufen einen markierten Rundlauf mit Ball und schliessen mit einem Schuss auf ein Ziel ab; Fehlschuss bedeutet eine Strafrunde.", m:"Markierungen, Ziel, Bälle", v:"Pässe, Slaloms oder Drehungen einbauen"}
     ],
     spielen: [
-      {t:"2 vs. 2 mit Passstationen", l:"U11", d:"Torloses Spiel: Zwei gegen zwei erzielen möglichst viele Pässe, zusätzliche Passstationen stehen fix an der Bande.", m:"Ball"},
-      {t:"Schwedenkasten-Abbau", l:"U9", d:"Tore entstehen nur durch die obere Öffnung eines Schwedenkastens; bei einem Treffer darf ein Kastenelement entfernt werden.", m:"2 Schwedenkästen", v:"Variante ohne Elemente zu Beginn"}
+      {t:"2 vs. 2 mit Passstationen", l:"U11", y:"tfHj3CbYzg0", d:"Torloses Spiel: Zwei gegen zwei erzielen möglichst viele Pässe, zusätzliche Passstationen stehen fix an der Bande.", m:"Ball"},
+      {t:"Schwedenkasten-Abbau", l:"U9", y:"SilCReBUouo", d:"Tore entstehen nur durch die obere Öffnung eines Schwedenkastens; bei einem Treffer darf ein Kastenelement entfernt werden.", m:"2 Schwedenkästen", v:"Variante ohne Elemente zu Beginn"}
     ]
   };
 
@@ -444,6 +447,7 @@
       '</div>' +
       '<h3>' + ex.t + '</h3>' +
       '<p>' + ex.d + '</p>' +
+      (ex.y ? '<a class="video-link" href="https://youtu.be/' + ex.y + '" target="_blank" rel="noopener">&#9654; Video ansehen</a>' : '') +
       '<div class="meta">' + metaLine(ex) + '</div>';
     div.querySelector(".reroll").onclick = onReroll;
     return div;
