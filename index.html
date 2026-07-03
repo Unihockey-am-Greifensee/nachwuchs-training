@@ -269,6 +269,12 @@
     cursor:pointer;
   }
   .ghost-btn:hover{border-color:var(--ink-soft);}
+  .whatsapp-btn{
+    background:#25D366;
+    border-color:#25D366;
+    color:#0b3d1f;
+  }
+  .whatsapp-btn:hover{background:#1fbd5a; border-color:#1fbd5a;}
 
   .hint{
     font-size:12px;
@@ -518,10 +524,42 @@
 
     var actions = document.createElement("div");
     actions.className = "actions-row";
-    actions.innerHTML = '<button class="ghost-btn" id="reshuffleBtn">&#8635; Ganzen Plan neu mischen</button><button class="ghost-btn" id="printBtn">Drucken</button>';
+    actions.innerHTML = '<button class="ghost-btn" id="reshuffleBtn">&#8635; Ganzen Plan neu mischen</button><button class="ghost-btn" id="printBtn">Drucken</button><button class="ghost-btn whatsapp-btn" id="waBtn">&#128242; Per WhatsApp teilen</button>';
     planArea.appendChild(actions);
     document.getElementById("reshuffleBtn").onclick = buildPlan;
     document.getElementById("printBtn").onclick = function(){window.print();};
+    document.getElementById("waBtn").onclick = function(){
+      window.open("https://wa.me/?text=" + encodeURIComponent(planToText()), "_blank");
+    };
+  }
+
+  function exerciseToText(prefix, ex){
+    var lines = [prefix + " " + ex.t + " (" + levelLabel[ex.l] + ")"];
+    lines.push(ex.d);
+    var meta = [];
+    if(ex.m) meta.push("Material: " + ex.m);
+    if(ex.v) meta.push("Variation: " + ex.v);
+    if(meta.length) lines.push(meta.join(" / "));
+    if(ex.y) lines.push("Video: https://youtu.be/" + ex.y);
+    return lines.join("\n");
+  }
+
+  function planToText(){
+    var p = state.plan;
+    var lines = [
+      "🏒 Grizzlys Trainingsplan – " + state.level + " · " + FOCUS_META[state.focus].label + " (≈ 85 Min.)",
+      "",
+      exerciseToText("1️⃣ Warmup (10 Min.)", p.warm),
+      "",
+      exerciseToText("2️⃣ " + FOCUS_META[state.focus].label + " 1 (15 Min.)", p.focus[0]),
+      "",
+      exerciseToText("3️⃣ " + FOCUS_META[state.focus].label + " 2 (15 Min.)", p.focus[1]),
+      "",
+      exerciseToText("4️⃣ Spielen (15 Min.)", p.play),
+      "",
+      "5️⃣ Mätschle (30 Min.)\nFreies Spiel in gemischten Teams."
+    ];
+    return lines.join("\n");
   }
 
   goBtn.onclick = buildPlan;
