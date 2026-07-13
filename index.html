@@ -2,22 +2,27 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Grizzlys Trainingsplaner</title>
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Bungee&family=Karla:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
   :root{
-    --ground:#F2F3EE;
+    --ground:#F5F4F2;
     --panel:#FFFFFF;
-    --ink:#1E2320;
-    --ink-soft:#5B6058;
-    --line:#DBDCCF;
-    --accent:#D9622B;
-    --accent-ink:#7A2E0C;
-    --forest:#3F6B4A;
-    --forest-ink:#1F3A27;
-    --slate:#2B4A66;
-    --slate-ink:#16283A;
-    --amber-tint:#FBE9DD;
-    --forest-tint:#E1EBE2;
-    --slate-tint:#DFE7ED;
-    font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --ink:#1C1C1A;
+    --ink-soft:#746F66;
+    --line:#DEDBD5;
+    --accent:#FF6507;
+    --accent-ink:#A83E00;
+    --forest:#1C1C1A;
+    --forest-ink:#1C1C1A;
+    --slate:#524E47;
+    --slate-ink:#232220;
+    --amber-tint:#FFE7D3;
+    --forest-tint:#ECEAE6;
+    --slate-tint:#DEDBD5;
+    --radius-md:8px;
+    --radius-lg:12px;
+    --shadow-block:4px 4px 0 var(--ink);
+    --shadow-sm:0 1px 2px rgba(28,28,26,.10);
+    font-family:'Karla',-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
   }
   *{box-sizing:border-box;}
   body{
@@ -42,9 +47,12 @@
     color:var(--forest-ink);
   }
   h1{
-    font-size:26px;
-    font-weight:800;
+    font-family:'Bungee','Arial Black',sans-serif;
+    font-size:24px;
+    font-weight:400;
     letter-spacing:-.01em;
+    line-height:1.05;
+    text-transform:uppercase;
     margin:2px 0 0;
     text-wrap:balance;
   }
@@ -75,8 +83,9 @@
 
   .panel{
     background:var(--panel);
-    border:1px solid var(--line);
-    border-radius:14px;
+    border:2px solid var(--ink);
+    border-radius:var(--radius-lg);
+    box-shadow:var(--shadow-block);
     padding:18px;
     display:flex;
     flex-direction:column;
@@ -98,7 +107,7 @@
   }
   .chip-btn{
     appearance:none;
-    border:1.5px solid var(--line);
+    border:2px solid var(--line);
     background:var(--panel);
     color:var(--ink);
     font-size:14px;
@@ -109,34 +118,43 @@
     transition:border-color .12s, background .12s, color .12s;
   }
   .chip-btn:hover{border-color:var(--ink-soft);}
-  .chip-btn:focus-visible{outline:3px solid var(--slate); outline-offset:2px;}
+  .chip-btn:focus-visible{outline:3px solid var(--accent); outline-offset:2px;}
   .chip-btn.active{
     background:var(--forest);
     border-color:var(--forest);
-    color:#fff;
+    color:var(--ground);
   }
   .chip-btn.active.focus-accent{
     background:var(--accent);
     border-color:var(--accent);
+    color:var(--ink);
   }
 
   .go-btn{
     appearance:none;
-    border:none;
+    border:2px solid var(--accent);
     background:var(--accent);
-    color:#fff;
+    color:var(--ink);
+    font-family:'Karla',sans-serif;
     font-size:15.5px;
-    font-weight:800;
+    font-weight:700;
     padding:14px 20px;
-    border-radius:11px;
+    border-radius:var(--radius-md);
+    box-shadow:var(--shadow-block);
     cursor:pointer;
     letter-spacing:.01em;
+    transition:transform .12s ease-out, box-shadow .12s ease-out;
   }
   .go-btn:disabled{
     background:#C9C7B8;
+    border-color:#C9C7B8;
+    box-shadow:none;
     cursor:not-allowed;
   }
-  .go-btn:not(:disabled):hover{background:#C1541F;}
+  .go-btn:not(:disabled):active{
+    transform:translate(4px,4px);
+    box-shadow:none;
+  }
   .go-btn:focus-visible{outline:3px solid var(--slate-ink); outline-offset:2px;}
 
   .plan-head{
@@ -160,9 +178,10 @@
 
   .block{
     background:var(--panel);
-    border:1px solid var(--line);
-    border-left:5px solid var(--forest);
-    border-radius:10px;
+    border:2px solid var(--ink);
+    border-left:6px solid var(--forest);
+    border-radius:var(--radius-lg);
+    box-shadow:var(--shadow-sm);
     padding:14px 16px;
     display:flex;
     flex-direction:column;
@@ -189,8 +208,8 @@
     font-weight:800;
     letter-spacing:.06em;
     text-transform:uppercase;
-    padding:3px 8px;
-    border-radius:6px;
+    padding:4px 9px;
+    border-radius:999px;
     background:var(--forest-tint);
     color:var(--forest-ink);
   }
@@ -200,13 +219,13 @@
 
   .reroll{
     appearance:none;
-    border:1px solid var(--line);
+    border:2px solid var(--line);
     background:var(--panel);
     color:var(--ink-soft);
     font-size:12px;
     font-weight:700;
     padding:5px 9px;
-    border-radius:8px;
+    border-radius:var(--radius-md);
     cursor:pointer;
     flex:none;
   }
@@ -280,13 +299,13 @@
   }
   .ghost-btn{
     appearance:none;
-    border:1.5px solid var(--line);
+    border:2px solid var(--ink);
     background:var(--panel);
     color:var(--ink);
     font-size:13.5px;
     font-weight:700;
     padding:12px 10px;
-    border-radius:9px;
+    border-radius:var(--radius-md);
     cursor:pointer;
     display:flex;
     align-items:center;
@@ -295,10 +314,10 @@
     text-align:center;
     line-height:1.2;
   }
-  .ghost-btn:hover{border-color:var(--ink-soft);}
+  .ghost-btn:hover{background:var(--forest-tint);}
   .whatsapp-btn{
     background:#25D366;
-    border-color:#25D366;
+    border-color:#1C1C1A;
     color:#0b3d1f;
   }
   .whatsapp-btn:hover{background:#1fbd5a; border-color:#1fbd5a;}
